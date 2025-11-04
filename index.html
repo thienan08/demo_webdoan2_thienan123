@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống giám sát phòng trọ</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Thêm Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>Power Monitor</span>
+        </div>
+        
+        <nav class="nav-menu">
+            <div class="nav-item active" id="dashboardBtn">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item" id="settingsBtn">
+                <span class="nav-icon">⚙️</span>
+                <span>Cài đặt ngưỡng</span>
+            </div>
+            <div class="nav-item" id="reportBtn">
+                <span class="nav-icon">📈</span>
+                <span>Báo cáo</span>
+            </div>
+            <div class="nav-item" id="paymentBtn">
+                <span class="nav-icon">💰</span>
+                <span>Tiền điện</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1>Chào mừng trở lại 👋</h1>
+            <div class="datetime">
+                <div id="currentDate"></div>
+                <div id="currentTime"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="content-section active">
+            <!-- Room 101 Details -->
+            <div class="room-section">
+                <h2 class="room-title">🏠 Phòng 101</h2>
+                <div class="room-grid">
+                    <div class="param-card">
+                        <div class="param-icon">⚡</div>
+                        <div class="param-info">
+                            <div class="param-label">Điện áp</div>
+                            <div class="param-value" id="room1Voltage">-- V</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">🔌</div>
+                        <div class="param-info">
+                            <div class="param-label">Dòng điện</div>
+                            <div class="param-value" id="room1Current">-- A</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">💡</div>
+                        <div class="param-info">
+                            <div class="param-label">Công suất</div>
+                            <div class="param-value" id="room1Power">-- W</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">📊</div>
+                        <div class="param-info">
+                            <div class="param-label">Năng lượng tháng này</div>
+                            <div class="param-value" id="room1Energy">-- kWh</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">💰</div>
+                        <div class="param-info">
+                            <div class="param-label">Tiền điện</div>
+                            <div class="param-value" id="room1Cost">-- VNĐ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card alert-card" id="room1Alert">
+                        <div class="param-icon">⚠️</div>
+                        <div class="param-info">
+                            <div class="param-label">Trạng thái</div>
+                            <div class="param-value small" id="room1AlertMsg">Đang kết nối...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room 102 Details -->
+            <div class="room-section">
+                <h2 class="room-title">🏠 Phòng 102</h2>
+                <div class="room-grid">
+                    <div class="param-card">
+                        <div class="param-icon">⚡</div>
+                        <div class="param-info">
+                            <div class="param-label">Điện áp</div>
+                            <div class="param-value" id="room2Voltage">-- V</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">🔌</div>
+                        <div class="param-info">
+                            <div class="param-label">Dòng điện</div>
+                            <div class="param-value" id="room2Current">-- A</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">💡</div>
+                        <div class="param-info">
+                            <div class="param-label">Công suất</div>
+                            <div class="param-value" id="room2Power">-- W</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">📊</div>
+                        <div class="param-info">
+                            <div class="param-label">Năng lượng tháng này</div>
+                            <div class="param-value" id="room2Energy">-- kWh</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card">
+                        <div class="param-icon">💰</div>
+                        <div class="param-info">
+                            <div class="param-label">Tiền điện</div>
+                            <div class="param-value" id="room2Cost">-- VNĐ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-card alert-card" id="room2Alert">
+                        <div class="param-icon">⚠️</div>
+                        <div class="param-info">
+                            <div class="param-label">Trạng thái</div>
+                            <div class="param-value small" id="room2AlertMsg">Đang kết nối...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Section -->
+        <div id="reportSection" class="content-section">
+            <h2 class="section-title">📈 Báo cáo thống kê</h2>
+            
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>📊 Điện năng tiêu thụ 4 tháng gần nhất</h3>
+                    </div>
+                    <canvas id="powerChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>💵 Chi phí điện 4 tháng gần nhất</h3>
+                    </div>
+                    <canvas id="costChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div id="paymentSection" class="content-section">
+            <div class="payment-header">
+                <h2 class="section-title">💰 Quản lý tiền điện</h2>
+                <button class="add-payment-btn" id="addPaymentBtn">+ Thêm bản ghi</button>
+            </div>
+            
+            <div class="payment-table-container">
+                <table class="payment-table">
+                    <thead>
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Số phòng</th>
+                            <th>Tiền điện</th>
+                            <th>Tình trạng</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentTableBody">
+                        <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Cài đặt ngưỡng cảnh báo</h2>
+                <span class="close" data-modal="settingsModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>🏠 Phòng 101</h3>
+                    <div class="input-group">
+                        <label>Ngưỡng điện năng (kWh):</label>
+                        <input type="number" id="room1PowerThreshold" value="150">
+                    </div>
+                    <div class="input-group">
+                        <label>Ngưỡng tiền điện (VNĐ):</label>
+                        <input type="number" id="room1CostThreshold" value="500000">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🏠 Phòng 102</h3>
+                    <div class="input-group">
+                        <label>Ngưỡng điện năng (kWh):</label>
+                        <input type="number" id="room2PowerThreshold" value="150">
+                    </div>
+                    <div class="input-group">
+                        <label>Ngưỡng tiền điện (VNĐ):</label>
+                        <input type="number" id="room2CostThreshold" value="500000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Giá điện (VNĐ/kWh):</label>
+                    <input type="number" id="electricityPrice" value="3500">
+                </div>
+
+                <button class="save-btn" id="saveSettings">💾 Lưu cài đặt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Payment Modal -->
+    <div id="addPaymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Thêm bản ghi tiền điện</h2>
+                <span class="close" data-modal="addPaymentModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Ngày:</label>
+                    <input type="date" id="paymentDate">
+                </div>
+                <div class="input-group">
+                    <label>Số phòng:</label>
+                    <select id="paymentRoom">
+                        <option value="101">Phòng 101</option>
+                        <option value="102">Phòng 102</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Tiền điện (VNĐ):</label>
+                    <input type="number" id="paymentAmount" placeholder="Nhập số tiền">
+                </div>
+                <div class="input-group">
+                    <label>Tình trạng:</label>
+                    <select id="paymentStatus">
+                        <option value="Chưa đóng">Chưa đóng</option>
+                        <option value="Đã đóng">Đã đóng</option>
+                    </select>
+                </div>
+                <button class="save-btn" id="savePayment">💾 Lưu bản ghi</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
